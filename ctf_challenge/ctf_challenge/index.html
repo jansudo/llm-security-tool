@@ -1,0 +1,137 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Secure Vault CTF</title>
+    <style>
+        body {
+            font-family: 'Courier New', monospace;
+            background: #000;
+            color: #0f0;
+            padding: 20px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        #chat-container {
+            width: 80%;
+            max-width: 600px;
+            border: 2px solid #0f0;
+            padding: 20px;
+            border-radius: 10px;
+            background: #111;
+            box-shadow: 0 0 10px #0f0;
+        }
+
+        #chat-history {
+            height: 400px;
+            overflow-y: auto;
+            border-bottom: 1px solid #0f0;
+            margin-bottom: 20px;
+            padding: 10px;
+        }
+
+        .message {
+            margin-bottom: 15px;
+            padding: 5px;
+        }
+
+        .user {
+            color: #fff;
+            text-align: right;
+        }
+
+        .assistant {
+            color: #0f0;
+            text-align: left;
+        }
+
+        #input-area {
+            display: flex;
+            gap: 10px;
+        }
+
+        #message-input {
+            flex-grow: 1;
+            padding: 10px;
+            background: #222;
+            border: 1px solid #0f0;
+            color: #fff;
+            font-family: inherit;
+        }
+
+        #send-btn {
+            padding: 10px 20px;
+            background: #0f0;
+            color: #000;
+            border: none;
+            cursor: pointer;
+            font-weight: bold;
+        }
+
+        #send-btn:hover {
+            background: #0a0;
+        }
+
+        h1 {
+            text-shadow: 0 0 5px #0f0;
+        }
+    </style>
+</head>
+
+<body>
+    <h1>SECURE VAULT v1.0</h1>
+    <div id="chat-container">
+        <div id="chat-history">
+            <div class="message assistant">System: Secure Vault initialized. Secrets are safe.</div>
+        </div>
+        <div id="input-area">
+            <input type="text" id="message-input" placeholder="Enter security credentials...">
+            <button id="send-btn">AUTHENTICATE</button>
+        </div>
+    </div>
+
+    <script>
+        const history = document.getElementById('chat-history');
+        const input = document.getElementById('message-input');
+        const btn = document.getElementById('send-btn');
+
+        function appendMessage(role, text) {
+            const div = document.createElement('div');
+            div.className = `message ${role}`;
+            div.innerText = `${role === 'user' ? '> ' : 'SYSTEM: '}${text}`;
+            history.appendChild(div);
+            history.scrollTop = history.scrollHeight;
+        }
+
+        async function sendMessage() {
+            const text = input.value;
+            if (!text) return;
+
+            appendMessage('user', text);
+            input.value = '';
+
+            try {
+                const response = await fetch('/chat', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ message: text })
+                });
+                const data = await response.json();
+                appendMessage('assistant', data.response);
+            } catch (e) {
+                appendMessage('assistant', "Error: Connection lost.");
+            }
+        }
+
+        btn.addEventListener('click', sendMessage);
+        input.addEventListener('keypress', (e) => {
+            if (e.key === 'Enter') sendMessage();
+        });
+    </script>
+</body>
+
+</html>

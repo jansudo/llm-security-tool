@@ -1,0 +1,31 @@
+[build-system]
+requires = ["setuptools>=61.0"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "llmsecurity"
+version = "0.1.0"
+description = "A CLI tool to analyze chat logic and generate prompts."
+authors = [
+  { name = "User", email = "user@example.com" },
+]
+readme = "README.md"
+requires-python = ">=3.7"
+classifiers = [
+    "Programming Language :: Python :: 3",
+    "License :: OSI Approved :: MIT License",
+    "Operating System :: OS Independent",
+]
+    "click",
+    "g4f[all]",
+    "rich",
+    "selenium",
+    "fastapi",
+    "uvicorn",
+    "python-dotenv",
+    "openai",
+    "requests",
+]
+
+[project.scripts]
+llmsecurity = "llmsecurity.cli:cli"
