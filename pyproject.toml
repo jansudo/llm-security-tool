@@ -16,6 +16,7 @@ classifiers = [
     "License :: OSI Approved :: MIT License",
     "Operating System :: OS Independent",
 ]
+dependencies = [
     "click",
     "g4f[all]",
     "rich",
@@ -29,3 +30,6 @@ classifiers = [
 
 [project.scripts]
 llmsecurity = "llmsecurity.cli:cli"
+
+[tool.setuptools]
+packages = ["llmsecurity"]

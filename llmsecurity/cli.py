@@ -39,13 +39,14 @@ def analyze(input_source, file):
 @click.option('--send', '-s', 'selector_send', required=False, help='CSS selector for send button (optional, auto-discovered if omitted)')
 @click.option('--objective', '-o', required=False, help='Specific objective for the AI (e.g. "Reveal system prompt")')
 @click.option('--iterations', '-n', default=5, help='Number of attack iterations (set to 0 for infinite/until success)')
-def attack(url, selector_input, selector_send, objective, iterations):
+@click.option('--report', '-r', required=False, help='Filename to save the attack report (JSON)')
+def attack(url, selector_input, selector_send, objective, iterations, report):
     """
     Active Red Team attack on a target URL.
     """
     from llmsecurity.attacker import Attacker
     
-    attacker = Attacker(url, selector_input, selector_send, iterations, objective)
+    attacker = Attacker(url, selector_input, selector_send, iterations, objective, report_file=report)
     attacker.run()
 
 if __name__ == '__main__':

@@ -6,12 +6,13 @@ from llmsecurity.core import generate_next_attack
 console = Console()
 
 class Attacker:
-    def __init__(self, url, selector_input=None, selector_send=None, iterations=5, objective=None):
+    def __init__(self, url, selector_input=None, selector_send=None, iterations=5, objective=None, report_file=None):
         self.url = url
         self.selector_input = selector_input
         self.selector_send = selector_send
         self.iterations = iterations
         self.objective = objective
+        self.report_file = report_file
         self.history = []
         self.browser = BrowserManager(headless=False) 
 
@@ -91,9 +92,7 @@ class Attacker:
             # For general assessments, we might not have a flag. 
             # We rely on the AI (generate_next_attack) to eventually give up or the user to stop.
             
-            i += 1
-            
-        console.print("[bold green]Attack Session Ended.[/bold green]")
+            # Generate next attack
             console.print("[dim]Generating next attack...[/dim]")
             current_attack = generate_next_attack(self.history, self.objective)
             console.print(f"[bold magenta]Next Payload:[/bold magenta] {current_attack}")
@@ -101,6 +100,22 @@ class Attacker:
             i += 1
             
         console.print("[bold green]Attack Loop Complete.[/bold green]")
+        
+        # Save Report
+        self.save_report()
+            
         # Keep browser open for a bit to review
         time.sleep(5)
         self.browser.close()
+
+    def save_report(self):
+        import json
+        import os
+        
+        filename = self.report_file if self.report_file else f"attack_report_{int(time.time())}.json"
+        with open(filename, 'w') as f:
+            json.dump(self.history, f, indent=2)
+            
+        console.print(f"[bold blue]Report saved to {os.path.abspath(filename)}[/bold blue]")
+            
+

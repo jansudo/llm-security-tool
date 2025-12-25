@@ -109,12 +109,13 @@ class BrowserManager:
         
         # Heuristics for Input
         input_candidates = [
-            "input[type='text']",
+            "#message-input",
+            ".chat-input",
+            "[aria-label='Message']",
             "textarea",
             "input[placeholder*='message']",
             "input[placeholder*='chat']",
-            "#message-input",
-            ".chat-input"
+            "input[type='text']",
         ]
         
         found_input = None
@@ -133,12 +134,14 @@ class BrowserManager:
             
         # Heuristics for Send Button
         btn_candidates = [
-            "button[type='submit']",
-            "button",
-            "input[type='submit']",
             ".send-btn",
             "#send-btn",
             "[aria-label='Send']",
+            "[aria-label='Submit']",
+            "button[type='submit']",
+            ".btn-primary",
+            "button",
+            "input[type='submit']",
             "svg" # Sometimes it's just an icon
         ]
         
